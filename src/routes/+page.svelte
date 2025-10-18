@@ -18,8 +18,8 @@
 
 	let searchQuery = $state('');
 	let filterTempat = $state('semua');
- 	
-  let filteredData = $derived.by(() => {
+
+	let filteredData = $derived.by(() => {
 		if (!query.data?.data) return [];
 
 		return query.data.data.filter((surah: any) => {
@@ -117,7 +117,7 @@
 				<!-- Surah List -->
 				<div class="flex flex-col space-y-3 sm:space-y-4">
 					{#each filteredData as surah (surah.nomor)}
-						<a href="/surahs/{surah.namaLatin.toLowerCase()}">
+						<a href="/surahs/{surah.nomor}">
 							<Card
 								class="group cursor-pointer border-l-4 border-l-transparent p-4 transition-all duration-200 hover:scale-[1.01] hover:border-l-primary hover:shadow-xl sm:p-6"
 							>

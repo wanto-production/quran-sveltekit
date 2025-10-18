@@ -1,8 +1,40 @@
 <script lang="ts">
-	import { BookOpen, Mail, Github, Twitter, Heart } from '@lucide/svelte';
+	import { BookOpen, Mail, Github, Twitter, Heart, ArrowUp, ArrowDown } from 'lucide-svelte';
 	import { Button } from '$components/ui/button';
+	import { fly, fade } from 'svelte/transition';
 
 	const currentYear = new Date().getFullYear();
+
+	let showScrollButtons = $state(false);
+	let isAtTop = $state(true);
+	let isAtBottom = $state(false);
+
+	function handleScroll() {
+		const scrollTop = window.scrollY;
+		const scrollHeight = document.documentElement.scrollHeight;
+		const clientHeight = window.innerHeight;
+
+		showScrollButtons = scrollTop > 300;
+		isAtTop = scrollTop < 100;
+		isAtBottom = scrollTop + clientHeight >= scrollHeight - 100;
+	}
+
+	function scrollToTop() {
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	}
+
+	function scrollToBottom() {
+		window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+	}
+
+	$effect(() => {
+		if (typeof window !== 'undefined') {
+			window.addEventListener('scroll', handleScroll);
+			handleScroll();
+
+			return () => window.removeEventListener('scroll', handleScroll);
+		}
+	});
 
 	const quickLinks = [
 		{ name: 'Beranda', href: '/' },
@@ -138,3 +170,34 @@
 		</div>
 	</div>
 </footer>
+
+<!-- Floating Scroll Buttons -->
+{#if showScrollButtons}
+	<div
+		class="fixed right-6 bottom-6 z-50 flex flex-col gap-2"
+		transition:fly={{ x: 100, duration: 300 }}
+	>
+		{#if !isAtTop}
+			<Button
+				onclick={scrollToTop}
+				size="icon"
+				class="h-12 w-12 rounded-full shadow-lg transition-all hover:scale-110"
+				title="Scroll ke atas"
+			>
+				<ArrowUp class="h-5 w-5" />
+			</Button>
+		{/if}
+
+		{#if !isAtBottom}
+			<Button
+				onclick={scrollToBottom}
+				size="icon"
+				variant="outline"
+				class="h-12 w-12 rounded-full shadow-lg transition-all hover:scale-110"
+				title="Scroll ke bawah"
+			>
+				<ArrowDown class="h-5 w-5" />
+			</Button>
+		{/if}
+	</div>
+{/if}

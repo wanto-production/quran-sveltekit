@@ -19,5 +19,5 @@
 	<Header user={data.user} />
 	{@render children?.()}
 	<Footer />
-	<SvelteQueryDevtools />
+	<SvelteQueryDevtools buttonPosition="bottom-left" />
 </QueryClientProvider>
